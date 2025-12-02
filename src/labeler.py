@@ -10,7 +10,7 @@ import threading
 load_dotenv()
 
 LM_STUDIO_URL = os.getenv("LM_STUDIO_URL", "http://127.0.0.1:1234/v1")
-LM_STUDIO_MODEL = os.getenv("LM_STUDIO_MODEL", "qwen/qwen3-vl-4b")
+LM_STUDIO_MODEL = os.environ["LM_STUDIO_MODEL"]
 
 client = OpenAI(base_url=LM_STUDIO_URL, api_key="lm-studio")
 model_lock = threading.Lock()
