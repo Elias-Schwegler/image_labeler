@@ -3,6 +3,9 @@
 ## Project Title and Description
 **Image Labeler** is a tool designed to prepare image datasets for training recognition models. It leverages a local LM Studio model (specifically Qwen VL) to automatically label images and provides utilities to split the dataset into training and testing sets. The project includes a CLI, a FastAPI backend, and a Streamlit UI.
 
+## Use Case: Automated Personal Photo Organization
+The primary goal of this project is to bootstrap a high-quality labeled dataset using a Vision Language Model (VLM). This labeled dataset will serve as the ground truth for training a lightweight, specialized image recognition model. Once trained, this specialized model can label and categorize personal photo collections significantly faster and more efficiently than a large VLM, enabling rapid, offline organization of large photo libraries into meaningful categories.
+
 ## Setup Instructions
 
 ### Prerequisites
