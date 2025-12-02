@@ -34,3 +34,10 @@ ENV/
 data/labeled/
 data/train/
 data/test/
+
+# Media
+.jpg
+.jpeg
+.png
+.gif
+.bmp
