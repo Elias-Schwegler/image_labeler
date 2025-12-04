@@ -1,0 +1,10 @@
+streamlit
+openai
+python-dotenv
+Pillow
+pytest
+fastapi
+uvicorn
+requests
+black
+flake8

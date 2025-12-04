@@ -47,6 +47,18 @@ The primary goal of this project is to bootstrap a high-quality labeled dataset 
       LM_STUDIO_URL=http://127.0.0.1:1234/v1
       LM_STUDIO_MODEL=qwen/qwen3-vl-4b
       ```
+    > **Note**: `LM_STUDIO_MODEL` is **mandatory**. The application will not start without it.
+    
+    > **Note**: Images are automatically resized to a maximum dimension of 1024px before processing to prevent context overflow errors.
+
+## Key Features
+- **Automated Labeling**: Uses local VLM to label images.
+- **Resolution Control**: Adjustable image resolution (256px - 1024px) to balance speed vs. quality.
+- **Robust Splitting**: 
+    - Split dataset into Train/Test sets based on a configurable ratio.
+    - **Resume Capability**: Can split only the images that have been labeled so far, using the `labels.json` file.
+- **Interruption Handling**: "Stop Labeling" button allows safely pausing the process, with progress saved automatically.
+
 
 ## How to Run
 

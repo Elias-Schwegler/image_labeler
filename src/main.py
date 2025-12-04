@@ -1,12 +1,11 @@
 import argparse
 import os
-import sys
 import subprocess
 from pathlib import Path
 from tqdm import tqdm
-from .data_loader import get_image_files, save_labels, ensure_directory
-from .labeler import label_image
-from .splitter import split_dataset, organize_dataset
+from src.data_loader import get_image_files, save_labels, ensure_directory
+from src.labeler import label_image
+from src.splitter import split_dataset, organize_dataset
 
 
 def main():
