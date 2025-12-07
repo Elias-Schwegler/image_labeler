@@ -34,6 +34,13 @@ ENV/
 data/labeled/
 data/train/
 data/test/
+data/processed/
+data/cli_output/
+data/cli_test_output/
+data/api_output/
+data/api_test_output/
+data/split_test_output/
+data/cli_reverify/
 
 # Media
 .jpg
@@ -41,3 +48,6 @@ data/test/
 .png
 .gif
 .bmp
+
+# Exceptions
+!data/raw/TEST_IMAGES/

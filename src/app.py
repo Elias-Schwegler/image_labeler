@@ -58,6 +58,7 @@ with tab1:
             labeled_data = [] 
 
             # Prepare save path
+            # Ensure the output directory exists before saving
             os.makedirs(output_dir, exist_ok=True)
             save_path = os.path.join(output_dir, "labels.json")
 
@@ -66,6 +67,7 @@ with tab1:
 
             for i, file_path in enumerate(files):
                 # Check for stop
+                # The stop button allows the user to interrupt the process safely
                 if stop_placeholder.button("Stop Labeling", key=f"stop_{i}"):
                     st.warning("Labeling stopped by user.")
                     break
@@ -74,6 +76,9 @@ with tab1:
 
                 # Define callback
                 def update_progress(percent, message):
+                    """
+                    Callback function to update the progress bar and status text.
+                    """
                     current_bar.progress(percent)
                     status_text.text(f"Processing {os.path.basename(file_path)}: {message}")
 
@@ -132,7 +137,7 @@ with tab2:
                             if "original_path" in item and os.path.exists(item["original_path"]):
                                 files.append(item["original_path"])
                             elif "filename" in item:
-                                # Fallback: try to construct path from input_dir
+                                # Fallback: try to construct path from input_dir if original_path is missing or invalid
                                 potential_path = os.path.join(input_dir, item["filename"])
                                 if os.path.exists(potential_path):
                                     files.append(potential_path)
@@ -157,8 +162,18 @@ with tab2:
             else:
                 try:
                     train_files, test_files = split_dataset(files, split_ratio)
+                    
+                    # Load labels if available to pass to organize_dataset
+                    labeled_data = []
+                    if os.path.exists(labels_path):
+                        try:
+                            with open(labels_path, "r", encoding="utf-8") as f:
+                                labeled_data = json.load(f)
+                        except Exception:
+                            pass # Ignore errors here, just won't split labels
+
                     train_dir, test_dir = organize_dataset(
-                        train_files, test_files, output_dir
+                        train_files, test_files, output_dir, labeled_data=labeled_data
                     )
 
                     st.success("Dataset split successfully!")

@@ -1,0 +1,23 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+test_env/
+.env
+
+# Jupyter
+.ipynb_checkpoints
+
+# Project specific outputs
+data/processed/
+data/cli_test_output/
+data/api_test_output/
+*.egg-info/

@@ -9,6 +9,10 @@ from src.splitter import split_dataset, organize_dataset
 
 
 def main():
+    """
+    Main entry point for the Image Labeler CLI.
+    Parses arguments and orchestrates the labeling and splitting process.
+    """
     parser = argparse.ArgumentParser(description="Image Labeler CLI")
     parser.add_argument(
         "--path", type=str, help="Path to the directory containing images"
@@ -26,6 +30,7 @@ def main():
 
     args = parser.parse_args()
 
+    # Launch Streamlit UI if requested
     if args.ui:
         print("Starting Streamlit UI...")
         # Get the path to app.py relative to this script
@@ -33,6 +38,7 @@ def main():
         subprocess.run(["streamlit", "run", str(app_path)])
         return
 
+    # Validate input path for CLI mode
     if not args.path:
         print("Error: --path is required unless --ui is specified.")
         return
@@ -79,7 +85,9 @@ def main():
     print(f"Splitting dataset with ratio {args.split_ratio}...")
     train_files, test_files = split_dataset(image_files, args.split_ratio)
 
-    train_dir, test_dir = organize_dataset(train_files, test_files, str(output_dir))
+    train_dir, test_dir = organize_dataset(
+        train_files, test_files, str(output_dir), labeled_data=labeled_data
+    )
     print(f"Dataset organized:")
     print(f"  Train: {len(train_files)} images in {train_dir}")
     print(f"  Test: {len(test_files)} images in {test_dir}")

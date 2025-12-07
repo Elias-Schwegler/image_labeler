@@ -1,14 +1,24 @@
 version: '3.8'
 
 services:
-  app:
+  streamlit:
     build: .
     ports:
       - "8501:8501"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+      - LM_STUDIO_MODEL=qwen/qwen3-vl-4b
+    command: streamlit run src/app.py --server.port=8501 --server.address=0.0.0.0 --browser.serverAddress=localhost
+
+  api:
+    build: .
+    ports:
       - "8000:8000"
     volumes:
       - ./data:/app/data
     environment:
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
       - LM_STUDIO_MODEL=qwen/qwen3-vl-4b
-    # host.docker.internal is needed to access localhost from within the container on Windows/Mac
+    command: uvicorn src.api:app --host 0.0.0.0 --port 8000

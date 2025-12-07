@@ -24,6 +24,14 @@ from PIL import Image
 def encode_image(image_path: str, max_size: int = 1024) -> str:
     """
     Encode an image file to a base64 string, resizing if necessary.
+
+    Args:
+        image_path (str): Path to the image file.
+        max_size (int): Maximum dimension (width or height) for the image. 
+                        Images larger than this will be resized.
+
+    Returns:
+        str: Base64 encoded string of the image.
     """
     with Image.open(image_path) as img:
         # Convert to RGB to handle PNGs with alpha channel
@@ -48,12 +56,23 @@ def label_image(
 ) -> Dict[str, Any]:
     """
     Send an image to the local LM Studio model and get a structured label response.
+
+    Args:
+        image_path (str): Path to the image file.
+        prompt (str): The prompt to send to the VLM.
+        progress_callback (Optional[callable]): A callback function to report progress (percent, message).
+        max_size (int): Maximum image size for encoding.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing 'label', 'description', and 'tags'.
+                        Returns an error dictionary if processing fails.
     """
     if progress_callback:
         progress_callback(0.1, "Encoding image...")
     base64_image = encode_image(image_path, max_size=max_size)
 
     # JSON Schema for structured output
+    # This schema enforces the model to return a valid JSON object with specific fields
     json_schema = {
         "name": "image_label_response",
         "strict": "true",
@@ -82,6 +101,8 @@ def label_image(
         if progress_callback:
             progress_callback(0.3, "Sending request to LM Studio...")
 
+        # Use a lock to ensure sequential access to the local model
+        # This prevents overloading the local inference server
         with model_lock:
             response = client.chat.completions.create(
                 model=LM_STUDIO_MODEL,

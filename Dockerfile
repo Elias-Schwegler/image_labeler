@@ -3,8 +3,8 @@ FROM python:3.10-slim
 WORKDIR /app
 
 COPY requirements.txt .
-# If requirements.txt doesn't exist yet, we'll install from setup.py or manually.
-# For now, let's assume we install via pip install .
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
