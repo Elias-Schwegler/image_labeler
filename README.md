@@ -76,6 +76,10 @@ The system consists of three main interfaces (CLI, Streamlit UI, FastAPI) that i
     *   **Resume Capability**: Pick up where you left off using existing `labels.json`.
 *   **🛑 Safe Interruption**: Stop labeling at any time; progress is automatically saved.
 
+## Repository
+
+**GitHub**: [https://github.com/Elias-Schwegler/image_labeler](https://github.com/Elias-Schwegler/image_labeler)
+
 ## Setup Instructions
 
 ### Prerequisites
@@ -87,12 +91,29 @@ The system consists of three main interfaces (CLI, Streamlit UI, FastAPI) that i
 
 1.  **Clone the repository**
 2.  **Create Virtual Environment** (Choose one)
-    *   **Conda**: `conda create -n image_labeler_env python=3.10 && conda activate image_labeler_env`
-    *   **Venv**: `python -m venv venv && source venv/bin/activate` (or `.\venv\Scripts\activate` on Windows)
+
+    **Option A: pyenv (Recommended)**
+    ```bash
+    pyenv install 3.10.6
+    pyenv virtualenv 3.10.6 image_labeler_env
+    pyenv activate image_labeler_env
+    ```
+
+    **Option B: Conda**
+    ```bash
+    conda create -n image_labeler_env python=3.10 && conda activate image_labeler_env
+    ```
+
+    **Option C: Venv**
+    ```bash
+    python -m venv venv && source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+    ```
+
 3.  **Install Dependencies**
     ```bash
     pip install -e .
     ```
+
 4.  **Configure Environment**
     Create a `.env` file:
     ```env
@@ -100,6 +121,14 @@ The system consists of three main interfaces (CLI, Streamlit UI, FastAPI) that i
     LM_STUDIO_MODEL=qwen/qwen3-vl-4b
     ```
     > **Note**: `LM_STUDIO_MODEL` is mandatory. Images are resized to max 1024px.
+
+### Automated Checks
+
+The project includes an `autotest.sh` script (similar to a CI pipeline) to automate testing, formatting, and linting.
+
+```bash
+./autotest.sh
+```
 
 ## Usage
 
@@ -128,7 +157,14 @@ View the interactive API documentation (Swagger UI) at:
 
 *   **📄 labels.json**: A JSON file containing image paths and their generated labels.
 *   **📂 /train & /test**: Organized directories containing the split dataset.
-*   **📓 Notebooks**: Experimental code in `notebooks/`.
+## Setup Aids
+
+*   **📓 Notebooks**: The `notebooks/` directory contains **setup aids** and experimental code. It is **not** an expected output of the usage flow, but rather a helper for development or exploration.
+
+## Training Example (Out of Scope)
+
+> [!NOTE]
+> The `training_example/` directory provides a standalone demonstration of how to use the labeled data. **This code is for educational curiosity only and is not part of the core Image Labeler tool.** It shows how one *might* train a ResNet18 model using the generated dataset.
 
 ## Project Structure
 

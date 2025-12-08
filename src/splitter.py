@@ -5,6 +5,7 @@ from typing import List, Tuple, Dict, Any, Optional
 import json
 from .data_loader import ensure_directory
 
+
 def split_dataset(
     image_files: List[str], split_ratio: float
 ) -> Tuple[List[str], List[str]]:
@@ -70,13 +71,13 @@ def organize_dataset(
     if labeled_data:
         train_labels = []
         test_labels = []
-        
+
         # Create sets for faster lookup
-        # We use os.path.normpath/abspath to ensure consistency, 
+        # We use os.path.normpath/abspath to ensure consistency,
         # but simple string matching might suffice if paths are consistent.
         # Using basename might be safer if paths change, but duplicates are possible.
         # Let's try to match by original_path if available, or filename.
-        
+
         train_files_set = set(os.path.abspath(f) for f in train_files)
         test_files_set = set(os.path.abspath(f) for f in test_files)
 
@@ -94,16 +95,24 @@ def organize_dataset(
                 # This is less robust but might be necessary
                 filename = item.get("filename")
                 if filename:
-                     if any(os.path.basename(f) == filename for f in train_files):
-                         train_labels.append(item)
-                     elif any(os.path.basename(f) == filename for f in test_files):
-                         test_labels.append(item)
+                    if any(
+                        os.path.basename(f) == filename for f in train_files
+                    ):
+                        train_labels.append(item)
+                    elif any(
+                        os.path.basename(f) == filename for f in test_files
+                    ):
+                        test_labels.append(item)
 
         # Save split labels
-        with open(os.path.join(train_dir, "labels.json"), "w", encoding="utf-8") as f:
+        with open(
+            os.path.join(train_dir, "labels.json"), "w", encoding="utf-8"
+        ) as f:
             json.dump(train_labels, f, indent=4)
-            
-        with open(os.path.join(test_dir, "labels.json"), "w", encoding="utf-8") as f:
+
+        with open(
+            os.path.join(test_dir, "labels.json"), "w", encoding="utf-8"
+        ) as f:
             json.dump(test_labels, f, indent=4)
 
     return train_dir, test_dir

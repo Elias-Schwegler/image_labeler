@@ -20,14 +20,13 @@ import io
 from PIL import Image
 
 
-
 def encode_image(image_path: str, max_size: int = 1024) -> str:
     """
     Encode an image file to a base64 string, resizing if necessary.
 
     Args:
         image_path (str): Path to the image file.
-        max_size (int): Maximum dimension (width or height) for the image. 
+        max_size (int): Maximum dimension (width or height) for the image.
                         Images larger than this will be resized.
 
     Returns:
@@ -37,11 +36,11 @@ def encode_image(image_path: str, max_size: int = 1024) -> str:
         # Convert to RGB to handle PNGs with alpha channel
         if img.mode != "RGB":
             img = img.convert("RGB")
-        
+
         # Resize if max dimension > max_size
         if max(img.size) > max_size:
             img.thumbnail((max_size, max_size))
-        
+
         # Save to buffer
         buffer = io.BytesIO()
         img.save(buffer, format="JPEG", quality=85)
@@ -124,7 +123,10 @@ def label_image(
                         ],
                     },
                 ],
-                response_format={"type": "json_schema", "json_schema": json_schema},
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": json_schema,
+                },
                 temperature=0.7,
             )
 

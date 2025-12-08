@@ -23,7 +23,9 @@ def main():
         default=0.8,
         help="Train/Test split ratio (default: 0.8)",
     )
-    parser.add_argument("--ui", action="store_true", help="Start the Streamlit UI")
+    parser.add_argument(
+        "--ui", action="store_true", help="Start the Streamlit UI"
+    )
     parser.add_argument(
         "--output", type=str, help="Output directory for processed data"
     )

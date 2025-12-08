@@ -16,22 +16,26 @@ os.makedirs(output_dir, exist_ok=True)
 # Generate dummy labels if not exist, based on actual images
 image_files = get_image_files(input_dir)
 if not image_files:
-    print(f"No images found in {input_dir}. Please ensure TEST_IMAGES has content.")
+    print(
+        f"No images found in {input_dir}. Please ensure TEST_IMAGES has content."
+    )
     exit(1)
 
 labeled_data = []
 for img_path in image_files:
-    labeled_data.append({
-        "filename": os.path.basename(img_path),
-        "original_path": img_path,
-        "label": "dummy_label",
-        "description": "auto-generated for testing"
-    })
+    labeled_data.append(
+        {
+            "filename": os.path.basename(img_path),
+            "original_path": img_path,
+            "label": "dummy_label",
+            "description": "auto-generated for testing",
+        }
+    )
 
 print(f"Generated {len(labeled_data)} dummy labels for testing.")
 
 # Mocking the split process as done in app.py
-# We need to find the files first. 
+# We need to find the files first.
 # In app.py, it tries to find files from labels.json or input_dir.
 files = []
 # Try to load from labels.json first (logic from app.py)

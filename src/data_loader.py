@@ -1,6 +1,6 @@
 import os
 import json
-import shutil
+
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -51,7 +51,8 @@ def load_labels(input_file: str) -> List[Dict[str, Any]]:
         input_file (str): The path to the input JSON file.
 
     Returns:
-        List[Dict[str, Any]]: The list of labeled data dictionaries, or an empty list if the file doesn't exist.
+        List[Dict[str, Any]]: The list of labeled data dictionaries, or
+        an empty list if the file doesn't exist.
     """
     if not os.path.exists(input_file):
         return []

@@ -12,13 +12,18 @@ st.title("Image Labeler & Splitter")
 # Sidebar Configuration
 st.sidebar.header("Configuration")
 input_dir = st.sidebar.text_input("Input Directory", value="./data/raw")
-output_dir = st.sidebar.text_input("Output Directory", value="./data/processed")
+output_dir = st.sidebar.text_input(
+    "Output Directory", value="./data/processed"
+)
 max_resolution = st.sidebar.slider(
     "Max Image Resolution",
     min_value=256,
     max_value=1024,
     value=1024,
-    help="Lower resolution increases processing speed but may reduce label quality.",
+    help=(
+        "Lower resolution increases processing speed but "
+        "may reduce label quality."
+    ),
 )
 split_ratio = st.sidebar.slider("Train/Test Split Ratio", 0.0, 1.0, 0.8)
 
@@ -43,19 +48,20 @@ with tab1:
             overall_bar = st.progress(0)
             st.write("Current Image Progress")
             current_bar = st.progress(0)
-            
+
             status_text = st.empty()
             stop_placeholder = st.empty()
-            
+
             # Initialize or retrieve existing data
             if "labeled_data" not in st.session_state:
                 st.session_state["labeled_data"] = []
-            
+
             labeled_data = st.session_state["labeled_data"]
-            # Filter out already labeled files if you wanted to support resuming, 
-            # but for now we'll just append or start over. 
+            # Filter out already labeled files if you wanted to support
+            # resuming,
+            # but for now we'll just append or start over.
             # Let's start fresh for "Start Labeling".
-            labeled_data = [] 
+            labeled_data = []
 
             # Prepare save path
             # Ensure the output directory exists before saving
@@ -67,20 +73,26 @@ with tab1:
 
             for i, file_path in enumerate(files):
                 # Check for stop
-                # The stop button allows the user to interrupt the process safely
+                # The stop button allows the user to interrupt the process
+                # safely
                 if stop_placeholder.button("Stop Labeling", key=f"stop_{i}"):
                     st.warning("Labeling stopped by user.")
                     break
 
-                status_text.text(f"Processing {os.path.basename(file_path)}...")
+                status_text.text(
+                    f"Processing {os.path.basename(file_path)}..."
+                )
 
                 # Define callback
                 def update_progress(percent, message):
                     """
-                    Callback function to update the progress bar and status text.
+                    Callback function to update the progress bar and status
+                    text.
                     """
                     current_bar.progress(percent)
-                    status_text.text(f"Processing {os.path.basename(file_path)}: {message}")
+                    status_text.text(
+                        f"Processing {os.path.basename(file_path)}: {message}"
+                    )
 
                 # Label image
                 try:
@@ -92,13 +104,13 @@ with tab1:
                     result["filename"] = os.path.basename(file_path)
                     result["original_path"] = file_path
                     labeled_data.append(result)
-                    
+
                     # Update session state incrementally
                     st.session_state["labeled_data"] = labeled_data
-                    
+
                     # Save incrementally
                     save_labels(labeled_data, save_path)
-                    
+
                 except Exception as e:
                     st.error(f"Error processing {file_path}: {e}")
 
@@ -106,9 +118,13 @@ with tab1:
                 current_bar.progress(1.0)
                 overall_bar.progress((i + 1) / total_files)
 
-            status_text.text("Labeling Complete!" if len(labeled_data) == total_files else "Labeling Interrupted.")
-            stop_placeholder.empty() # Remove stop button
-            
+            status_text.text(
+                "Labeling Complete!"
+                if len(labeled_data) == total_files
+                else "Labeling Interrupted."
+            )
+            stop_placeholder.empty()  # Remove stop button
+
             if len(labeled_data) == total_files:
                 st.success(f"All labels saved to {save_path}")
             else:
@@ -126,7 +142,7 @@ with tab2:
         if os.path.exists(output_dir):
             labels_path = os.path.join(output_dir, "labels.json")
             files = []
-            
+
             # Try to load from labels.json first
             if os.path.exists(labels_path):
                 try:
@@ -134,35 +150,49 @@ with tab2:
                         data = json.load(f)
                         # Extract original paths
                         for item in data:
-                            if "original_path" in item and os.path.exists(item["original_path"]):
+                            if "original_path" in item and os.path.exists(
+                                item["original_path"]
+                            ):
                                 files.append(item["original_path"])
                             elif "filename" in item:
-                                # Fallback: try to construct path from input_dir if original_path is missing or invalid
-                                potential_path = os.path.join(input_dir, item["filename"])
+                                # Fallback: try to construct path from input_dir
+                                # if original_path is missing or invalid
+                                potential_path = os.path.join(
+                                    input_dir, item["filename"]
+                                )
                                 if os.path.exists(potential_path):
                                     files.append(potential_path)
-                    
+
                     if files:
-                        st.success(f"Loaded {len(files)} labeled images from {labels_path}")
+                        st.success(
+                            f"Loaded {len(files)} labeled images from "
+                            f"{labels_path}"
+                        )
                     else:
-                        st.warning("Found labels.json but could not extract valid image paths.")
+                        st.warning(
+                            "Found labels.json but could not extract valid "
+                            "image paths."
+                        )
                 except Exception as e:
                     st.error(f"Error loading labels.json: {e}")
 
             # Fallback to input directory if no labeled files found
             if not files:
                 if os.path.exists(input_dir):
-                    st.info("No labeled data found. Using all images from input directory.")
+                    st.info(
+                        "No labeled data found. Using all images from input "
+                        "directory."
+                    )
                     files = get_image_files(input_dir)
                 else:
                     st.error("Input directory does not exist.")
-            
+
             if not files:
                 st.error("No files found to split.")
             else:
                 try:
                     train_files, test_files = split_dataset(files, split_ratio)
-                    
+
                     # Load labels if available to pass to organize_dataset
                     labeled_data = []
                     if os.path.exists(labels_path):
@@ -170,10 +200,13 @@ with tab2:
                             with open(labels_path, "r", encoding="utf-8") as f:
                                 labeled_data = json.load(f)
                         except Exception:
-                            pass # Ignore errors here, just won't split labels
+                            pass  # Ignore errors here, just won't split labels
 
                     train_dir, test_dir = organize_dataset(
-                        train_files, test_files, output_dir, labeled_data=labeled_data
+                        train_files,
+                        test_files,
+                        output_dir,
+                        labeled_data=labeled_data,
                     )
 
                     st.success("Dataset split successfully!")

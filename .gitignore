@@ -41,6 +41,8 @@ data/api_output/
 data/api_test_output/
 data/split_test_output/
 data/cli_reverify/
+training_example/model.pth
+training_example/class_map.json
 
 # Media
 .jpg
