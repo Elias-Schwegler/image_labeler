@@ -20,7 +20,7 @@ import io
 from PIL import Image
 
 
-def encode_image(image_path: str, max_size: int = 1024) -> str:
+def encode_image(image_path: str, max_size: int = 256) -> str:
     """
     Encode an image file to a base64 string, resizing if necessary.
 
